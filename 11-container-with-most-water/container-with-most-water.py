@@ -1,20 +1,24 @@
 class Solution:
     def maxArea(self, height: List[int]) -> int:
-        # n vertical lines
-        # Area=(right index−left index)×min(height[left],height[right])
-        # need to maximize the width and possible height combination
-
+        # water = width * height
+        n = len(height)
+        r = n-1
         l = 0
-        r = len(height)-1
-        maxArea = 0
-        
-        while (l < r):
-            area = (r-l)*min(height[r], height[l])
-            maxArea = max(area, maxArea)
-            if height[l] < height[r]:
-                # move smaller height forward
-                l += 1
-            else:
-                r -=1
+        currMax = 0
 
-        return maxArea
+        while l < r:
+            # calculate the water
+            w = r-l
+            h = min(height[l], height[r])
+            area = w * h
+            currMax = max(area, currMax)
+
+            if height[l] < height[r]:
+                l+=1
+            else:
+                r-=1
+
+        return currMax
+
+
+
