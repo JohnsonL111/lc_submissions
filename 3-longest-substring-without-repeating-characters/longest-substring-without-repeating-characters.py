@@ -1,23 +1,22 @@
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
-        # input: a string
-        # output: length of longest substring without repeating chars
+        r = 0
+        l = 0
+        longest = 0
+        curr = set() # keeps track of current longest substring
 
-        # we want to make sure that l to r has non duplicate characters.
-        # we do that by maintaining a set that contains the chars between l and r 
-
-        l, r = 0, 0
-
-        repeat = set()
-        lenMax = 0
-
-        while r <= len(s)-1:
-            while (s[r] in repeat):
-                repeat.remove(s[l])
-                l += 1
+        n = len(s)
+        for r in range(n):
+            c = s[r]
+            if c in curr:
+                while c in curr:
+                    curr.remove(s[l])
+                    l += 1
+            # add it
+            curr.add(s[r])
+            # r += 1 # this auto gets incremented
             
-            repeat.add(s[r])
-            lenMax = max(lenMax, r-l+1)
-            r +=1
-        return lenMax
+            longest = max(longest, r-l+1)
+        return longest
+
 
