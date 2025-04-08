@@ -8,10 +8,9 @@ class Solution:
         n = len(s)
         for r in range(n):
             c = s[r]
-            if c in curr:
-                while c in curr:
-                    curr.remove(s[l])
-                    l += 1
+            while c in curr:
+                curr.remove(s[l])
+                l += 1
             # add it
             curr.add(s[r])
             # r += 1 # this auto gets incremented
