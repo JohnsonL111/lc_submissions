@@ -22,12 +22,7 @@ class Solution:
         # first half: 1-2-3
         # 2nd half: 4-5
         # 1-5-2-4-3
-class Solution:
-    def reorderList(self, head: Optional[ListNode]) -> None:
-        """
-        Do not return anything, modify head in-place instead.
-        """
-
+        
         if not head or not head.next:
             return
 
