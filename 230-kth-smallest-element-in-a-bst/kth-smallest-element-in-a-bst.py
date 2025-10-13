@@ -17,7 +17,7 @@ class Solution:
     
     def inorder(self, node) -> None:
         # process
-        if not node or self.ans:
+        if not node:
             return
         
         self.inorder(node.left)
