@@ -1,20 +1,28 @@
 class Solution:
     def badSensor(self, sensor1: List[int], sensor2: List[int]) -> int:
+        # loop over length of list
         n = len(sensor1)
+        drop1 = False
+        drop2 = False
+        # at the last idx it doesnt matter
+        for i in range(0, n-1):
+            if sensor1[i] != sensor2[i]:
+                # check if sensor 1 dropped
 
-        # find first mismatch
-        i = 0
-        while i < n and sensor1[i] == sensor2[i]:
-            i += 1
-        if i == n:
-            return -1  # identical
+                if sensor1[i:-1] == sensor2[i+1:]:
+                    print(f'sensor1[i:-1]: {sensor1[i:-1]} sensor2[i+1]: {sensor2[i+1:]}')
+                    drop1 = True
 
-        # test both hypotheses at the first mismatch
-        drop1 = (sensor1[i:-1] == sensor2[i+1:])  # s1 dropped at i
-        drop2 = (sensor2[i:-1] == sensor1[i+1:])  # s2 dropped at i
-
+                # check if sensor 2 dropped 
+                if sensor2[i:-1] == sensor1[i+1:]:
+                    print(f'sensor2[i-1]: {sensor2[i:-1]} sensor1[i+1:]: {sensor1[i+1:]}')
+                    drop2 = True
+                break
+                
+        
         if drop1 and not drop2:
             return 1
         if drop2 and not drop1:
             return 2
-        return -1  # ambiguous or neither fits
+        else:
+            return -1
