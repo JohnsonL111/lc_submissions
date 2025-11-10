@@ -2,29 +2,45 @@ from collections import defaultdict, deque
 
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        graph = defaultdict(list)
-        indegree = [0] * numCourses  # in-degree count for each course
-        
-        # Build graph + in-degree
-        for crs, pre in prerequisites:
-            graph[pre].append(crs)     # pre → crs (edge direction)
-            indegree[crs] += 1         # crs depends on one more prerequisite
+        # Step 1: Build the adjacency list and in-degree array
+        graph = defaultdict(list)         # key: course, value: list of next courses
+        indegree = [0] * numCourses       # indegree[i] = number of prerequisites for course i
 
-        # ✅ Step 1: Start with all nodes having indegree 0 (no prereqs)
-        queue = deque([i for i in range(numCourses) if indegree[i] == 0])
-        taken = 0  # count of courses that can be completed
+        # Fill in graph and indegree counts
+        for pair in prerequisites:
+            course = pair[0]
+            prereq = pair[1]
 
-        # ✅ Step 2: BFS-like traversal
-        while queue:
-            course = queue.popleft()
-            taken += 1  # mark this course as completed
+            # prereq -> course (you must take prereq before course)
+            graph[prereq].append(course)
+            indegree[course] += 1
 
-            # Reduce indegree for dependent courses
-            for neighbor in graph[course]:
+        # Step 2: Initialize the queue with all courses that have no prerequisites (in-degree = 0)
+        queue = deque()
+        for i in range(numCourses):
+            if indegree[i] == 0:
+                queue.append(i)
+
+        # Step 3: Process the queue in BFS order
+        courses_taken = 0  # counts how many courses we can finish
+
+        while len(queue) > 0:
+            # Remove a course from the queue
+            current = queue.popleft()
+            courses_taken += 1
+
+            # For each course that depends on the current one
+            for neighbor in graph[current]:
+                # One prerequisite has now been satisfied
                 indegree[neighbor] -= 1
-                # If a course now has no prerequisites, add it to queue
+
+                # If that course now has no prerequisites left, add it to the queue
                 if indegree[neighbor] == 0:
                     queue.append(neighbor)
 
-        # ✅ Step 3: If we completed all courses, no cycle exists
-        return taken == numCourses
+        # Step 4: Check if we were able to take all courses
+        # If we processed all nodes, there was no cycle
+        if courses_taken == numCourses:
+            return True
+        else:
+            return False
